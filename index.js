@@ -81,15 +81,6 @@ axios.get( URI_IDP_METADATA ).then( response => {
 	app.post('/sp/acs', async ( req, res ) => {
 		debug( 'Received /sp/acs post request...' );
 
-		console.log( 'Query parameters: ' );
-		console.log( req.query );
-
-		console.log( 'Request body: ' );
-		console.log( req.body );
-
-		// Extract the relayState from the request headers:
-		console.log( 'Headers: ' );
-		console.log( req.headers );
 		const relayState = req.headers.relayState;
 
 		// console.log( 'Session: ' );
@@ -97,6 +88,8 @@ axios.get( URI_IDP_METADATA ).then( response => {
 
 		try {
 			const { extract } = await sp.parseLoginResponse( idp, 'post', req );
+			console.log( 'Extract: ' );
+			console.log( extract );
 			req.session.loggedIn = true;
 			req.session.attributes = extract.attributes;
 			return res.send( JSON.stringify( extract.attributes ) );
