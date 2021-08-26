@@ -106,7 +106,9 @@ axios.get( URI_IDP_METADATA ).then( response => {
 	app.get( '/login', ( req, res ) => {
 		const { id, context } = sp.createLoginRequest( idp, 'redirect' );
 		debug( 'Id: %s', id );
-		context.relayState = encodeURI( req.query.url || '/' );
+
+		const serverURL = req.protocol + '://' + req.get( 'host' );
+		context.relayState = req.query.url || serverURL;
 		debug( 'Context: %s', context );
 		return res.redirect( context );
 	});
