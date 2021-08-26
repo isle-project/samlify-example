@@ -113,8 +113,8 @@ axios.get( URI_IDP_METADATA ).then( response => {
 		const relayState = req.query.url || serverURL;
 		parsedUrl.searchParams.append( 'RelayState', relayState );
 
-		debug( 'Context: %s', context );
-		return res.redirect( context );
+		console.log( 'Redirect URL: %s', parsedUrl );
+		return res.redirect( parsedUrl );
 	});
 
 	/**
