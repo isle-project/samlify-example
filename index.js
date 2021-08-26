@@ -1,10 +1,10 @@
 // MODULES //
 
-const express = require('express');
-const fs = require('fs');
-const saml = require('samlify');
+const express = require( 'express' );
+const fs = require( 'fs' );
+const saml = require( 'samlify' );
 const validator = require( '@authenio/samlify-node-xmllint' );
-const axios = require('axios');
+const axios = require( 'axios' );
 const bodyParser = require( 'body-parser' );
 const debug = require('debug')( 'samlify' );
 
@@ -24,6 +24,13 @@ const URI_IDP_METADATA = 'https://samltest.id/saml/idp';
 
 axios.get( URI_IDP_METADATA ).then( response => {
 
+	/**
+	* Instantiates a SAML identity provider.
+	*
+	* ## Notes
+	*
+	* -   Documentation for the configuration object for the `IdentityProvider` can be found [here](https://samlify.js.org/#/idp-configuration)
+	*/
 	const idp = saml.IdentityProvider({
 		metadata: response.data,
 		isAssertionEncrypted: true,
@@ -31,11 +38,18 @@ axios.get( URI_IDP_METADATA ).then( response => {
 		wantLogoutRequestSigned: true
 	});
 
+	/**
+	* Instantiates a SAML service provider.
+	*
+	* ## Notes
+	*
+	* -   Documentation for the configuration object for the `ServiceProvider` can be found [here](https://samlify.js.org/#/sp-configuration)
+	*/
 	const sp = saml.ServiceProvider({
-		entityID: 'https://isle-hub.stat.cmu.edu/shibboleth',
+		entityID: 'https://isle-hub.stat.cmu.edu/shibboleth', // SP entity ID
 		authnRequestsSigned: false,
 		wantAssertionsSigned: false,
-		wantMessageSigned: false,
+		wantMessageSigned: false, 
 		wantLogoutResponseSigned: false,
 		wantLogoutRequestSigned: false,
 		signingCert: fs.readFileSync( '/etc/shibboleth/sp-signing-cert.pem' ),
