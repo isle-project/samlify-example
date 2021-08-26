@@ -109,7 +109,7 @@ axios.get( URI_IDP_METADATA ).then( response => {
 		debug( 'Id: %s', id );
 		
 		const parsedUrl = new URL( context );
-		const serverURL = req.protocol + '://' + req.get( 'host' );
+		const serverURL = req.protocol + '://' + req.get( 'host' ); // FIXME: Currently resolves to localhost, want to resolve to the server URL
 		const relayState = req.query.url || serverURL;
 		parsedUrl.searchParams.append( 'RelayState', relayState );
 
