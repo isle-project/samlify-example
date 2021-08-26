@@ -124,7 +124,7 @@ axios.get( URI_IDP_METADATA ).then( response => {
 
 	app.get( '/*', ( req, res, next ) => {
 		if ( !req.session.loggedIn ) {
-			return res.redirect( `/login?url=${req.originalUrl}` );
+			return res.redirect( `/shibboleth/login?url=${encodeURI( req.originalUrl )}` );
 		}
 		next();
 	});
