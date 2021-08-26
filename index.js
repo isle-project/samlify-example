@@ -10,6 +10,68 @@ const bodyParser = require( 'body-parser' );
 const debug = require('debug')( 'samlify' );
 
 
+// VARIABLES //
+
+const ATTRIBUTE_MAP = {
+	'cn': 'urn:oid:2.5.4.3',
+	'sn': 'urn:oid:2.5.4.4',
+	'givenName': 'urn:oid:2.5.4.42',
+	'displayName': 'urn:oid:2.16.840.1.113730.3.1.241',
+	'uid': 'urn:oid:0.9.2342.19200300.100.1.1',
+	'mail': 'urn:oid:0.9.2342.19200300.100.1.3',
+	'telephoneNumber': 'urn:oid:2.5.4.20',
+	'title': 'urn:oid:2.5.4.12',
+	'initials': 'urn:oid:2.5.4.43',
+	'description': 'urn:oid:2.5.4.13',
+	'carLicense': 'urn:oid:2.16.840.1.113730.3.1.1',
+	'departmentNumber': 'urn:oid:2.16.840.1.113730.3.1.2',
+	'employeeNumber': 'urn:oid:2.16.840.1.113730.3.1.3',
+	'employeeType': 'urn:oid:2.16.840.1.113730.3.1.4',
+	'preferredLanguage': 'urn:oid:2.16.840.1.113730.3.1.39',
+	'manager': 'urn:oid:0.9.2342.19200300.100.1.10',
+	'seeAlso': 'urn:oid:2.5.4.34',
+	'facsimileTelephoneNumber': 'urn:oid:2.5.4.23',
+	'street': 'urn:oid:2.5.4.9',
+	'postOfficeBox': 'urn:oid:2.5.4.18',
+	'postalCode': 'urn:oid:2.5.4.17',
+	'st': 'urn:oid:2.5.4.8',
+	'l': 'urn:oid:2.5.4.7',
+	'o': 'urn:oid:2.5.4.10',
+	'ou': 'urn:oid:2.5.4.11',
+	'businessCategory': 'urn:oid:2.5.4.15',
+	'physicalDeliveryOfficeName': 'urn:oid:2.5.4.19'
+};
+const INVERSE_ATTRIBUTE_MAP = {
+	'urn:oid:2.5.4.3': 'cn',
+	'urn:oid:2.5.4.4': 'sn',
+	'urn:oid:2.5.4.42': 'givenName',
+	'urn:oid:2.16.840.1.113730.3.1.241': 'displayName',
+	'urn:oid:0.9.2342.19200300.100.1.1': 'uid',
+	'urn:oid:0.9.2342.19200300.100.1.3': 'mail',
+	'urn:oid:2.5.4.20': 'telephoneNumber',
+	'urn:oid:2.5.4.12': 'title',
+	'urn:oid:2.5.4.43': 'initials',
+	'urn:oid:2.5.4.13': 'description',
+	'urn:oid:2.16.840.1.113730.3.1.1': 'carLicense',
+	'urn:oid:2.16.840.1.113730.3.1.2': 'departmentNumber',
+	'urn:oid:2.16.840.1.113730.3.1.3': 'employeeNumber',
+	'urn:oid:2.16.840.1.113730.3.1.4': 'employeeType',
+	'urn:oid:2.16.840.1.113730.3.1.39': 'preferredLanguage',
+	'urn:oid:0.9.2342.19200300.100.1.10': 'manager',
+	'urn:oid:2.5.4.34': 'seeAlso',
+	'urn:oid:2.5.4.23': 'facsimileTelephoneNumber',
+	'urn:oid:2.5.4.9': 'street',
+	'urn:oid:2.5.4.18': 'postOfficeBox',
+	'urn:oid:2.5.4.17': 'postalCode',
+	'urn:oid:2.5.4.8': 'st',
+	'urn:oid:2.5.4.7': 'l',
+	'urn:oid:2.5.4.10': 'o',
+	'urn:oid:2.5.4.11': 'ou',
+	'urn:oid:2.5.4.15': 'businessCategory',
+	'urn:oid:2.5.4.19': 'physicalDeliveryOfficeName'
+};
+
+
 // MAIN //
 
 const app = express();
@@ -93,7 +155,11 @@ axios.get( URI_IDP_METADATA ).then( response => {
 			console.log( 'Extract: ' );
 			console.log( extract );
 			req.session.loggedIn = true;
-			req.session.attributes = extract.attributes;
+			const attributes = {};
+			for ( const key in extract.attributes ) {
+				attributes[ INVERSE_ATTRIBUTE_MAP[ key ] ] = extract.attributes[ key ];
+			}
+			req.session.attributes = attributes;
 			return res.send( JSON.stringify( extract.attributes ) );
 		} catch ( e ) {
 			console.error( '[FATAL] when parsing login response...', e );
@@ -139,7 +205,7 @@ axios.get( URI_IDP_METADATA ).then( response => {
 	});
 
 	app.get( '/greeting', ( req, res ) => {
-		const name = req.session.attributes[ 'urn:oid:2.5.4.42' ] || 'Anonymous';
+		const name = req.session.attributes[ 'givenName' ] || 'Anonymous';
 		res.send( `Hello, ${name}!` );
 	});
 
