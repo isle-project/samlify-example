@@ -86,6 +86,9 @@ axios.get( URI_IDP_METADATA ).then( response => {
 		console.log( req.headers );
 		const relayState = req.headers.relayState;
 
+		console.log( 'Session: ' );
+		console.log( req.session );
+
 		try {
 			const { extract } = await sp.parseLoginResponse( idp, 'post', req );
 			req.session.loggedIn = true;
@@ -103,7 +106,7 @@ axios.get( URI_IDP_METADATA ).then( response => {
 	app.get( '/login', ( req, res ) => {
 		const { id, context } = sp.createLoginRequest( idp, 'redirect' );
 		debug( 'Id: %s', id );
-		context.relayState = req.query.url || '/';
+		context.relayState = encodeURI( req.query.url || '/' );
 		debug( 'Context: %s', context );
 		return res.redirect( context );
 	});
