@@ -81,6 +81,12 @@ axios.get( URI_IDP_METADATA ).then( response => {
 	app.post('/sp/acs', async ( req, res ) => {
 		debug( 'Received /sp/acs post request...' );
 
+		console.log( 'Query parameters: ' );
+		console.log( req.query );
+
+		console.log( 'Request body: ' );
+		console.log( req.body );
+
 		// Extract the relayState from the request headers:
 		console.log( 'Headers: ' );
 		console.log( req.headers );
@@ -108,7 +114,7 @@ axios.get( URI_IDP_METADATA ).then( response => {
 		debug( 'Id: %s', id );
 
 		const serverURL = req.protocol + '://' + req.get( 'host' );
-		// context.relayState = req.query.url || serverURL;
+		context.relayState = req.query.url || serverURL;
 		debug( 'Context: %s', context );
 		return res.redirect( context );
 	});
