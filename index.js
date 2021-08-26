@@ -70,6 +70,7 @@ const INVERSE_ATTRIBUTE_MAP = {
 	'urn:oid:2.5.4.15': 'businessCategory',
 	'urn:oid:2.5.4.19': 'physicalDeliveryOfficeName'
 };
+const SERVER_URL = 'https://isle-hub.stat.cmu.edu/shibboleth';
 
 
 // MAIN //
@@ -173,8 +174,7 @@ axios.get( URI_IDP_METADATA ).then( response => {
 		debug( 'Id: %s', id );
 		
 		const parsedUrl = new URL( context );
-		const serverURL = req.protocol + '://' + req.get( 'host' ); // FIXME: Currently resolves to localhost, want to resolve to the server URL
-		const relayState = req.query.url || serverURL;
+		const relayState = req.query.url || SERVER_URL;
 		parsedUrl.searchParams.append( 'RelayState', relayState );
 
 		console.log( 'Redirect URL: %s', parsedUrl );
