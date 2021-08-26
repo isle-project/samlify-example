@@ -2,6 +2,7 @@
 
 const express = require( 'express' );
 const fs = require( 'fs' );
+const cookieSession = require( 'cookie-session' );
 const saml = require( 'samlify' );
 const validator = require( '@authenio/samlify-node-xmllint' );
 const axios = require( 'axios' );
@@ -16,6 +17,11 @@ app.use( bodyParser.urlencoded({
 	extended: true 
 }) );
 app.use( bodyParser.json() );
+
+app.use( cookieSession({
+	name: 'session',
+	keys: [ 'my-favorite-secret' ]
+}) );
 
 saml.setSchemaValidator( validator );
 
@@ -72,10 +78,18 @@ axios.get( URI_IDP_METADATA ).then( response => {
 	* 
 	* The IdP will send a SAML response with the user's attributes to this endpoint.
 	*/
-	app.post('/sp/acs', async (req, res) => {
+	app.post('/sp/acs', async ( req, res ) => {
 		debug( 'Received /sp/acs post request...' );
+
+		// Extract the relayState from the request headers:
+		console.log( 'Headers: ' );
+		console.log( req.headers );
+		const relayState = req.headers.relayState;
+
 		try {
-			const { extract } = await sp.parseLoginResponse(idp, 'post', req);
+			const { extract } = await sp.parseLoginResponse( idp, 'post', req );
+			req.session.loggedIn = true;
+			req.session.attributes = extract.attributes;
 			return res.send( JSON.stringify( extract.attributes ) );
 		} catch ( e ) {
 			console.error( '[FATAL] when parsing login response...', e );
@@ -86,25 +100,38 @@ axios.get( URI_IDP_METADATA ).then( response => {
 	/**
 	* Endpoint for initiating the login process.
 	*/
-	app.get('/login', async (req, res) => {
-		const { id, context } = await sp.createLoginRequest( idp, 'redirect' );
-		debug( 'Context: %s', context );
+	app.get( '/login', ( req, res ) => {
+		const { id, context } = sp.createLoginRequest( idp, 'redirect' );
 		debug( 'Id: %s', id );
-		return res.redirect(context);
+		context.relayState = req.query.url || '/';
+		debug( 'Context: %s', context );
+		return res.redirect( context );
 	});
 
 	/**
 	* Endpoint to retrieve the Identity Provider metadata.
 	*/ 
-	app.get('/idp/metadata', (req, res) => {
+	app.get( '/idp/metadata', (req, res) => {
 		res.header( 'Content-Type', 'text/xml' ).send( idp.getMetadata() );
 	});
 
 	/**
 	* Endpoint to retrieve the Service Provider's metadata.
 	*/
-	app.get('/sp/metadata', ( req, res ) => {
+	app.get( '/sp/metadata', ( req, res ) => {
 		res.header( 'Content-Type','text/xml' ).send( sp.getMetadata() );
+	});
+
+	app.get( '/*', ( req, res, next ) => {
+		if ( !req.session.loggedIn ) {
+			return res.redirect( `/login?url=${req.originalUrl}` );
+		}
+		next();
+	});
+
+	app.get( '/greeting', ( req, res ) => {
+		const name = req.session.attributes[ 'urn:oid:2.5.4.42' ] || 'Anonymous';
+		res.send( `Hello, ${name}!` );
 	});
 
 	/**
