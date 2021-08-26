@@ -147,9 +147,6 @@ axios.get( URI_IDP_METADATA ).then( response => {
 		console.log( 'Relay state: ' );
 		console.log( relayState );
 
-		// console.log( 'Session: ' );
-		// console.log( req.session );
-
 		try {
 			const { extract } = await sp.parseLoginResponse( idp, 'post', req );
 			console.log( 'Extract: ' );
@@ -160,7 +157,8 @@ axios.get( URI_IDP_METADATA ).then( response => {
 				attributes[ INVERSE_ATTRIBUTE_MAP[ key ] ] = extract.attributes[ key ];
 			}
 			req.session.attributes = attributes;
-			return res.send( JSON.stringify( attributes ) );
+			console.log( JSON.stringify( attributes ) );
+			return res.redirect( relayState || '/' );
 		} catch ( e ) {
 			console.error( '[FATAL] when parsing login response...', e );
 			return res.redirect( '/' );
