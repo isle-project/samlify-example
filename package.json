@@ -1,0 +1,19 @@
+{
+    "name": "samlify-example",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "Apache-2.0",
+    "dependencies": {
+        "@authenio/samlify-node-xmllint": "^2.0.0",
+        "axios": "^0.21.1",
+        "body-parser": "^1.19.0",
+        "debug": "^4.3.2",
+        "express": "^4.17.1",
+        "samlify": "^2.8.0-rc1"
+    }
+}
