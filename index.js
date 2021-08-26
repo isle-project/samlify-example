@@ -160,7 +160,7 @@ axios.get( URI_IDP_METADATA ).then( response => {
 				attributes[ INVERSE_ATTRIBUTE_MAP[ key ] ] = extract.attributes[ key ];
 			}
 			req.session.attributes = attributes;
-			return res.send( JSON.stringify( extract.attributes ) );
+			return res.send( JSON.stringify( attributes ) );
 		} catch ( e ) {
 			console.error( '[FATAL] when parsing login response...', e );
 			return res.redirect( '/' );
