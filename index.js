@@ -40,10 +40,11 @@ const ATTRIBUTE_MAP = {
 	'o': 'urn:oid:2.5.4.10',
 	'ou': 'urn:oid:2.5.4.11',
 	'businessCategory': 'urn:oid:2.5.4.15',
-	'physicalDeliveryOfficeName': 'urn:oid:2.5.4.19'
+	'physicalDeliveryOfficeName': 'urn:oid:2.5.4.19',
+	'eduPersonAffiliation': 'urn:oid:1.3.6.1.4.1.5923.1.1.1.9'
 };
 const INVERSE_ATTRIBUTE_MAP = {
-	'urn:oid:1.3.6.1.4.1.5923.1.1.1.6': 'email',
+	'urn:oid:1.3.6.1.4.1.5923.1.1.1.6': 'email', // eduPersonPrincipalName
 	'urn:oid:2.5.4.3': 'cn',
 	'urn:oid:2.5.4.4': 'sn',
 	'urn:oid:2.5.4.42': 'givenName',
@@ -70,7 +71,8 @@ const INVERSE_ATTRIBUTE_MAP = {
 	'urn:oid:2.5.4.10': 'o',
 	'urn:oid:2.5.4.11': 'ou',
 	'urn:oid:2.5.4.15': 'businessCategory',
-	'urn:oid:2.5.4.19': 'physicalDeliveryOfficeName'
+	'urn:oid:2.5.4.19': 'physicalDeliveryOfficeName',
+	'urn:oid:1.3.6.1.4.1.5923.1.1.1.9': 'eduPersonAffiliation'
 };
 const SERVER_URL = 'https://isle-hub.stat.cmu.edu/shibboleth';
 
