@@ -149,6 +149,8 @@ axios.get( URI_IDP_METADATA ).then( response => {
 		console.log( relayState );
 
 		try {
+			console.log( 'req.body: ' );
+			console.log( req.body );
 			const { extract } = await sp.parseLoginResponse( idp, 'post', req );
 			console.log( 'Extract: ' );
 			console.log( extract );
