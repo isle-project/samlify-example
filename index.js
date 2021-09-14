@@ -134,10 +134,7 @@ axios.get( URI_IDP_METADATA ).then( response => {
 			Binding: 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
 			Location: 'https://isle-hub.stat.cmu.edu/shibboleth/sp/acs',
 		}],
-		nameIDFormat: [
-			'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
-			'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified'
-		]
+		nameIDFormat: 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified'
 	});
 
 	/**
