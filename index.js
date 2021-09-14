@@ -13,6 +13,7 @@ const debug = require('debug')( 'samlify' );
 // VARIABLES //
 
 const ATTRIBUTE_MAP = {
+	'email': 'urn:oid:1.3.6.1.4.1.5923.1.1.1.6',
 	'cn': 'urn:oid:2.5.4.3',
 	'sn': 'urn:oid:2.5.4.4',
 	'givenName': 'urn:oid:2.5.4.42',
@@ -42,6 +43,7 @@ const ATTRIBUTE_MAP = {
 	'physicalDeliveryOfficeName': 'urn:oid:2.5.4.19'
 };
 const INVERSE_ATTRIBUTE_MAP = {
+	'urn:oid:1.3.6.1.4.1.5923.1.1.1.6': 'email',
 	'urn:oid:2.5.4.3': 'cn',
 	'urn:oid:2.5.4.4': 'sn',
 	'urn:oid:2.5.4.42': 'givenName',
