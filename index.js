@@ -89,7 +89,7 @@ app.use( cookieSession({
 saml.setSchemaValidator( validator );
 
 // URL to the Identity Provider metadata:
-const URI_IDP_METADATA = 'https://samltest.id/saml/idp';
+const URI_IDP_METADATA = 'https://login.cmu.edu/idp/shibboleth';
 
 axios.get( URI_IDP_METADATA ).then( response => {
 
